@@ -1,0 +1,126 @@
+{% extends 'crm/main.html' %}
+{% block content %}
+<script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js'></script>
+
+<div class="container card">
+  <div class="row text-center text-light card-body bg-light">
+    <div class="col-6">
+      <canvas id="myChart" height="200px"></canvas>
+      <script>
+        var ctx = document.getElementById('myChart').getContext('2d');
+        var myChart = new Chart(ctx, {
+          type: 'pie',
+          data: {
+            labels: [{% for o in orders_label %}'{{o}}',{% endfor %}],
+        datasets: [{
+          data: [{% for p in og %}{{ p }}, {% endfor %}],
+          backgroundColor: [
+            'rgb(255, 99, 132)',
+            'rgb(54, 162, 235)',
+            'rgb(255, 206, 86)',
+            'rgb(74, 225, 136)',
+            'rgb(153, 102, 255)',
+            'rgb(255, 159, 64)'
+          ],
+            borderColor: [
+              'rgb(255, 99, 132)',
+              'rgb(54, 162, 235)',
+              'rgb(255, 206, 86)',
+              'rgb(74, 225, 136)',
+              'rgb(153, 102, 255)',
+              'rgb(255, 159, 64)'
+            ],
+              borderWidth: 1
+        }]
+    },
+        options: {
+          "responsive": true,
+            "maintainAspectRatio": false,
+              legend: {
+            display: false,
+        }
+        }
+});
+      </script>
+    </div>
+    <div class="col-6">
+      <canvas id="myChart2" height="200px"></canvas>
+      <script>
+        var ctx = document.getElementById('myChart2').getContext('2d');
+        var myChart2 = new Chart(ctx, {
+          type: 'bar',
+          data: {
+            labels: [{% for o in orders_label %}'{{o}}',{% endfor %}],
+        datasets: [{
+          data: [{% for p in og %} {{ p }}, {% endfor %}],
+          backgroundColor: [
+            'rgb(255, 99, 132)',
+            'rgb(54, 162, 235)',
+            'rgb(255, 206, 86)',
+            'rgb(74, 225, 136)',
+            'rgb(153, 102, 255)',
+            'rgb(255, 159, 64)'
+          ],
+            borderColor: [
+              'rgb(255, 99, 132)',
+              'rgb(54, 162, 235)',
+              'rgb(255, 206, 86)',
+              'rgb(74, 225, 136)',
+              'rgb(153, 102, 255)',
+              'rgb(255, 159, 64)'
+            ],
+              borderWidth: 1
+        }]
+    },
+        options: {
+          "responsive": true,
+            "maintainAspectRatio": false,
+              legend: {
+            display: false,
+            
+        }
+        }
+});
+      </script>
+    </div>
+  </div>
+</div>
+
+<div class="text-center justify-content-md-center mt-3">
+
+  <table class="my-table w-100">
+    <thead>
+
+      <tr>
+        <th colspan='9' scope="col">Recent Orders</th>
+      </tr>
+      <tr class="text-center">
+        <th>Product</th>
+        <th></th>
+        <th>Vendor</th>
+        <th></th>
+        <th>Customer</th>
+        <th>Date</th>
+        <th></th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for o in recent_orders %}
+      <tr>
+        <th scope="row">{{o.product.name}}</th>
+        <td></td>
+        <td>{{o.product.vendor}}</td>
+        <td></td>
+        <td>{{o.customer.name}}</td>
+        <td>{{o.date_created|date:"d-M h:i A"}}</td>
+        <td></td>
+        <td>{{o.status}}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+</div>
+
+{% endblock content %}
