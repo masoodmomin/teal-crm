@@ -3,7 +3,11 @@ from .models import Customer, Product, Order
 from .filters import ProductFilter
 from .forms import Form, ProductForm, ContactForm
 from django.db.models import Count, Q
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import authenticate, login, logout
+from django.contrib import messages
 
+@login_required
 def dashboard(request):
     orders = Order.objects.all()
     orders_label = set()
@@ -19,18 +23,20 @@ def dashboard(request):
     'total_orders':total_orders, 'recent_orders':recent_orders,'og':og}
     return render(request,'crm/dashboard.html', context)
 
-
+@login_required
 def products(request):
     products = Product.objects.all()
     pf = ProductFilter(request.GET, queryset=products)
     products = pf.qs
     return render(request,'crm/products.html',{'products':products,'pf':pf})
 
+@login_required
 def delete_product(request, pk):
     product = Product.objects.get(id=pk)
     product.delete()
     return redirect(request.META.get('HTTP_REFERER'))
 
+@login_required
 def update_product(request, pk):
     product = Product.objects.get(id=pk)
     form = ProductForm(instance=product)
@@ -42,6 +48,7 @@ def update_product(request, pk):
     context = {'form': form}
     return render(request,'crm/form_page.html',context)
 
+@login_required
 def create_product(request):
     form = ProductForm()
     if request.method == 'POST':
@@ -52,11 +59,12 @@ def create_product(request):
     context = {'form':form}
     return render(request,'crm/form_page.html', context)
 
+@login_required
 def orders(request):
     orders = Order.objects.order_by("-date_created")
     return render(request,'crm/orders.html',{'orders':orders})
 
-
+@login_required
 def contacts(request):
     req = request.GET.get('search',None)
     if req is not None:
@@ -68,6 +76,7 @@ def contacts(request):
         customers = Customer.objects.all()
     return render(request,'crm/contacts.html',{'customers':customers})
 
+@login_required
 def add_contact(request):
     form = ContactForm()
     if request.method == 'POST':
@@ -78,6 +87,7 @@ def add_contact(request):
     context = {'form':form}
     return render(request,"crm/form_page.html",context)
 
+@login_required
 def update_contact(request, pk):
     contact = Customer.objects.get(id=pk)
     form = ContactForm(instance=contact)
@@ -89,11 +99,13 @@ def update_contact(request, pk):
     context = {'form': form}
     return render(request,'crm/form_page.html',context)
 
+@login_required
 def delete_contact(request, pk):
     contact = Customer.objects.get(id=pk)
     contact.delete()
     return redirect(request.META.get('HTTP_REFERER'))
 
+@login_required
 def customer_orders(request, pk):
     customer = Customer.objects.get(id=pk)
     order = customer.order_set.all()
@@ -101,6 +113,7 @@ def customer_orders(request, pk):
     context = {'customer':customer,'order':order, 'total_orders':total_orders}
     return render(request,'crm/customer_orders.html', context)
 
+@login_required
 def create_order(request):
     form = Form()
     if request.method == 'POST':
@@ -111,6 +124,7 @@ def create_order(request):
     context = {'form':form}
     return render(request,'crm/form_page.html', context)
 
+@login_required
 def update_order(request, pk):
     order = Order.objects.get(id=pk)
     form = Form(instance=order)
@@ -122,7 +136,25 @@ def update_order(request, pk):
     context = {'form': form}
     return render(request,'crm/form_page.html',context)
     
+@login_required
 def delete_order(request, pk):
     order = Order.objects.get(id=pk)
     order.delete()
     return redirect(request.META.get('HTTP_REFERER'))
+
+
+def signin(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            return redirect('home')
+        else:
+            messages.info(request,"Username or Password is not correct.")
+    return render(request, 'crm/signin.html',{})
+
+def signout(request):
+    logout(request)
+    return redirect('signin')

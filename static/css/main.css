@@ -105,26 +105,41 @@
 }
 
 
+.login-body {background: rgb(255,255,255);
+  background: radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(67,198,172,0.2777485994397759) 100%);
+}
 
+.login-container {
+    margin-top: 10%;
+    justify-content: center;
+}
 
+.login-form {
+    padding: 5%;
+    border-radius:5px;
+    background: #43C6AC;
+    box-shadow: 0 5px 8px 0 rgba(0, 0, 0, 0.2), 0 9px 26px 0 rgba(0, 0, 0, 0.19);
+}
 
+.login-form h3 {
+    text-align: center;
+    color: #fff;
+}
 
+.login-container form {
+    padding: 10%;
+}
 
+.btnSubmit {
+    width: 50%;
+    border-radius: 1rem;
+    padding: 1.5%;
+    border: none;
+    cursor: pointer;
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+.login-form .btnSubmit {
+    font-weight: 600;
+    color: #0062cc;
+    background-color: #fff;
+}
