@@ -1,5 +1,4 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
 from .models import Customer, Product, Order
 from .filters import ProductFilter
 from .forms import Form, ProductForm, ContactForm
@@ -100,7 +99,7 @@ def customer_orders(request, pk):
     order = customer.order_set.all()
     total_orders = order.count()
     context = {'customer':customer,'order':order, 'total_orders':total_orders}
-    return render(request,'crm/customer.html', context)
+    return render(request,'crm/customer_orders.html', context)
 
 def create_order(request):
     form = Form()

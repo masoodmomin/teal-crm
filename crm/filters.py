@@ -2,7 +2,6 @@ import django_filters
 from .models import Product
 from django_filters import DateFromToRangeFilter
 from django import forms
-from django.db import models
 
 class ProductFilter(django_filters.FilterSet):
     name = django_filters.ModelChoiceFilter(queryset = Product.objects.all(), widget=forms.Select(attrs={'class': 'form-control form-control-sm'}))
